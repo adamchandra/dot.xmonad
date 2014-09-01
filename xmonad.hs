@@ -11,7 +11,14 @@
 
 -- Modules
 import XMonad
+
+
 import XMonad.Layout
+import XMonad.Layout.Circle
+import XMonad.Layout.Grid
+import XMonad.Layout.LayoutHints
+import XMonad.Layout.Named                 -- rename some layouts
+import XMonad.Layout.Reflect               -- ability to reflect layouts
 import XMonad.Layout.IM
 import XMonad.Layout.Gaps
 import XMonad.Layout.Named
@@ -31,6 +38,8 @@ import XMonad.Layout.Maximize
 import XMonad.Layout.ToggleLayouts
 import XMonad.Layout.MagicFocus
 import XMonad.Layout.WindowNavigation
+import XMonad.Hooks.SetWMName
+import XMonad.Actions.Navigation2D
 import XMonad.Layout.WindowSwitcherDecoration
 import XMonad.Layout.DraggingVisualizer
 import XMonad.Layout.LayoutBuilder
@@ -69,6 +78,8 @@ import qualified XMonad.StackSet as W
 import qualified Data.Map as M
 import qualified XMonad.Actions.FlexibleResize as Flex
 import qualified XMonad.Util.ExtensibleState as XS
+import XMonad.Actions.WindowGo
+import XMonad.Actions.WindowBringer
 
 
 --------------------------------------------------------------------------------------------
@@ -358,8 +369,8 @@ myFloaName = "Float"
 -- Startup Hook
 myStartupHook =
 	(setDefaultCursor xC_left_ptr) <+>
-	(spawn "/usr/bin/feh --bg-scale ~/Pictures/wallpapers/xmonad/xmonad_def_black.png") <+>
-	(spawn "/usr/bin/killall haskell-cpu-usage.out") <+>
+	-- (spawn "/usr/bin/feh --bg-scale ~/Pictures/wallpapers/xmonad/xmonad_def_black.png") <+>
+	-- (spawn "/usr/bin/killall haskell-cpu-usage.out") <+>
 	(liftIO $ threadDelay 1000000) <+> --needed so that xmonad can be launched on the fly without crashing
 	(spawn "/home/saunders/.xmonad/apps/haskell-cpu-usage.out 5") <+>
 	(startTimer 1 >>= XS.put . TID)
@@ -409,33 +420,64 @@ instance Transformer FLOATED Window where
 myFTabU = smartBorders $ named ("Unique " ++ myFTabName) $ tabbedAlways shrinkText myTitleTheme
 myFloaU = named ("Unique " ++ myFloaName) $ mouseResize $ noFrillsDeco shrinkText myTitleTheme simplestFloat
 
+-- (tiled ||| Mirror tiled ||| Circle ||| magnify Grid ||| Full)
+myLayoutACS = 
+           -- make manual gap adjustment possible.
+           --gaps (zip [U,D,L,R] (repeat 0)) $
+           avoidStruts $
+           layoutHints $
+           mkToggle1 NBFULL $
+           mkToggle1 REFLECTX $                                
+           mkToggle1 REFLECTY $                               
+           mkToggle1 NOBORDERS $
+           mkToggle1 MIRROR $
+           smartBorders (Circle ||| tiled ||| Grid)
+  where
+     -- default tiling algorithm partitions the screen into two panes
+     tiled   = Tall nmaster delta ratio
+     -- The default number of windows in the master pane
+     nmaster = 1
+     -- Default proportion of screen occupied by master pane
+     ratio   = 1/2
+     -- Percent of screen to increment by when resizing panes
+     delta   = 3/100
+
+
 -- Layout hook
 myLayoutHook =
 	gaps [(U,panelHeight), (D,panelHeight)] $
 	configurableNavigation noNavigateBorders $
 	minimize $
 	maximize $
+        --mkToggle1 NBFULL $
+        mkToggle (single NBFULL) $
+        --mkToggle1 REFLECTX $                                
+        --mkToggle1 REFLECTY $				     
+	--mkToggle1 NOBORDERS $
+	--mkToggle1 MIRROR $
 	mkToggle (single TABBED) $
 	mkToggle (single FLOATED) $
 	mkToggle (single MIRROR) $
 	mkToggle (single REFLECTX) $
 	mkToggle (single REFLECTY) $
-	onWorkspace (myWorkspaces !! 1) webLayouts $
-	onWorkspace (myWorkspaces !! 2) codeLayouts $
-	onWorkspace (myWorkspaces !! 4) chatLayouts $
+	--onWorkspace (myWorkspaces !! 1) webLayouts $
+	--onWorkspace (myWorkspaces !! 2) codeLayouts $
+	--onWorkspace (myWorkspaces !! 4) chatLayouts $
 	allLayouts where
 		--per workspace layouts
-		webLayouts  = (myToggleL myCst3 myCst3Name) ||| (myToggleL myCst1 myCst1Name)                                   --workspace 2 layouts
-		codeLayouts = (myToggleL myCst2 myCst2Name) ||| (myToggleL myOneB myOneBName) ||| (myToggleL myTile myTileName) --workspace 3 layouts
-		chatLayouts = myToggleL (withIM (0.2) (Title "Buddy List") myMosA) myChatName                                   --workspace 5 layouts
+		--webLayouts  = (myToggleL myCst3 myCst3Name) ||| (myToggleL myCst1 myCst1Name)                                   --workspace 2 layouts
+		--codeLayouts = (myToggleL myCst2 myCst2Name) ||| (myToggleL myOneB myOneBName) ||| (myToggleL myTile myTileName) --workspace 3 layouts
+		--chatLayouts = myToggleL (withIM (0.2) (Title "Buddy List") myMosA) myChatName                                   --workspace 5 layouts
 		allLayouts  =                                                                                                   -- rest of workspaces layouts
-			(myToggleL myCst1 myCst1Name) |||
-			(myToggleL myCst2 myCst2Name) |||
 			(myToggleL myTile myTileName) |||
-			(myToggleL myOneB myOneBName) |||
-			(myToggleL myMirr myMirrName) |||
-			(myToggleL myMosA myMosAName) |||
-			(myToggleL myCst3 myCst3Name)
+			(myToggleL Circle "Circle")   ||| 
+			(myToggleL Grid "Grid")    
+			-- (myToggleL myCst1 myCst1Name)  
+			--(myToggleL myCst2 myCst2Name) |||
+			--(myToggleL myOneB myOneBName) |||
+			--(myToggleL myMirr myMirrName) |||
+			--(myToggleL myMosA myMosAName) |||
+			--(myToggleL myCst3 myCst3Name)
 		--layouts
 		myTile = ResizableTall 1 0.03 0.5 []                                                                               --default xmonad layout
 		myMirr = Mirror myTile                                                                                             --mirror default xmonad layout
@@ -477,18 +519,16 @@ manageWindows = composeAll . concat $
 	, [ name      =? n --> doSideFloat NW              | n <- myFloatSN ]
 	, [ className =? c --> doF W.focusDown             | c <- myFocusDC ]
 	, [ currentWs =? (myWorkspaces !! 1) --> keepMaster "Chromium"      ]
-	, [ isFullscreen   --> doFullFloat ]
+	--, [ isFullscreen   --> doFullFloat ]
 	] where
 		name      = stringProperty "WM_NAME"
 		myIgnores = ["desktop", "desktop_window"]
-		myWebS    = ["Chromium", "Firefox", "Opera"]
-		myCodeS   = ["NetBeans IDE 7.3"]
-		myChatS   = ["Pidgin", "Xchat"]
-		myGfxS    = ["Gimp", "gimp", "GIMP"]
+		myWebS    = []
+		myCodeS   = []
+		myChatS   = []
+		myGfxS    = []
 		myAlt3S   = ["Amule", "Transmission-gtk"]
-		myFloatCC = ["MPlayer", "mplayer2", "File-roller", "zsnes", "Gcalctool", "Exo-helper-1"
-		            , "Gksu", "Galculator", "Nvidia-settings", "XFontSel", "XCalc", "XClock"
-		            , "Ossxmix", "Xvidcap", "Main", "Wicd-client.py"]
+		myFloatCC = []
 		myFloatCN = ["Choose a file", "Open Image", "File Operation Progress", "Firefox Preferences"
 		            , "Preferences", "Search Engines", "Set up sync", "Passwords and Exceptions"
 		            , "Autofill Options", "Rename File", "Copying files", "Moving files"
@@ -699,9 +739,10 @@ myWorkspaceL =
 myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 	--Xmonad bindings
-	[((modMask .|. shiftMask, xK_q), killAndExit)                        --Quit xmonad
-	, ((modMask, xK_q), killAndRestart)                                  --Restart xmonad
-	, ((0, xK_Pause), killAndRestart)
+	[
+          --((modMask .|. shiftMask, xK_q), killAndExit)                        --Quit xmonad
+	  --((modMask, xK_q), killAndRestart)                                  --Restart xmonad
+	  ((0, xK_Pause), killAndRestart)
 	, ((mod1Mask, xK_F2), shellPrompt myXPConfig)                        --Launch Xmonad shell prompt
 	, ((modMask, xK_F2), xmonadPrompt myXPConfig)                        --Launch Xmonad prompt
 	, ((mod1Mask, xK_F3), manPrompt myXPConfig)                          --Launch man prompt
@@ -710,7 +751,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 	, ((modMask, 0x0060), scratchPad)
 	, ((modMask .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf) --Launch default terminal
 	--Window management bindings
-	, ((modMask, xK_c), kill)                                                 --Close focused window
+	, ((modMask .|. shiftMask, xK_c), kill)                                                 --Close focused window
 	, ((mod1Mask, xK_F4), kill)
 	, ((modMask, xK_n), refresh)                                              --Resize viewed windows to the correct size
 	, ((modMask, xK_Tab), windows W.focusDown)                                --Move focus to the next window
@@ -718,29 +759,28 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 	, ((mod1Mask, xK_Tab), windows W.focusDown)
 	, ((modMask, xK_k), windows W.focusUp)                                    --Move focus to the previous window
 	, ((modMask, xK_a), windows W.focusMaster)                                --Move focus to the master window
-	, ((modMask .|. shiftMask, xK_a), windows W.swapMaster)                   --Swap the focused window and the master window
+	, ((modMask, xK_Return), windows W.swapMaster)                   --Swap the focused window and the master window
 	, ((modMask .|. shiftMask, xK_j), windows W.swapDown)                     --Swap the focused window with the next window
 	, ((modMask .|. shiftMask, xK_k), windows W.swapUp)                       --Swap the focused window with the previous window
 	, ((modMask, xK_h), sendMessage Shrink)                                   --Shrink the master area
 	, ((modMask .|. shiftMask, xK_Left), sendMessage Shrink)
 	, ((modMask, xK_l), sendMessage Expand)                                   --Expand the master area
 	, ((modMask .|. shiftMask, xK_Right), sendMessage Expand)
-	, ((modMask .|. shiftMask, xK_h), sendMessage MirrorShrink)               --MirrorShrink the master area
-	, ((modMask .|. shiftMask, xK_Down), sendMessage MirrorShrink)
-	, ((modMask .|. shiftMask, xK_l), sendMessage MirrorExpand)               --MirrorExpand the master area
-	, ((modMask .|. shiftMask, xK_Up), sendMessage MirrorExpand)
+	--, ((modMask .|. shiftMask, xK_h), sendMessage MirrorShrink)               --MirrorShrink the master area
+	--, ((modMask .|. shiftMask, xK_Down), sendMessage MirrorShrink)
+	--, ((modMask .|. shiftMask, xK_l), sendMessage MirrorExpand)               --MirrorExpand the master area
+	--, ((modMask .|. shiftMask, xK_Up), sendMessage MirrorExpand)
 	, ((modMask, xK_t), withFocused $ windows . W.sink)                       --Push window back into tiling
 	, ((modMask .|. shiftMask, xK_t), rectFloatFocused)                       --Push window into float
-	, ((modMask, xK_m), withFocused minimizeWindow)                           --Minimize window
-	, ((modMask, xK_b), withFocused (sendMessage . maximizeRestore))          --Maximize window
-	, ((modMask .|. shiftMask, xK_m), sendMessage RestoreNextMinimizedWin)    --Restore window
-	, ((modMask .|. shiftMask, xK_f), fullFloatFocused)                       --Push window into full screen
-	, ((modMask, xK_comma), sendMessage (IncMasterN 1))                       --Increment the number of windows in the master area
-	, ((modMask, xK_period), sendMessage (IncMasterN (-1)))                   --Deincrement the number of windows in the master area
-	, ((modMask, xK_Right), sendMessage $ Go R)                               --Change focus to right
-	, ((modMask, xK_Left ), sendMessage $ Go L)                               --Change focus to left
-	, ((modMask, xK_Up   ), sendMessage $ Go U)                               --Change focus to up
-	, ((modMask, xK_Down ), sendMessage $ Go D)                               --Change focus to down
+	--, ((modMask, xK_m), withFocused minimizeWindow)                           --Minimize window
+	--, ((modMask, xK_b), withFocused (sendMessage . maximizeRestore))          --Maximize window
+	--, ((modMask .|. shiftMask, xK_m), sendMessage RestoreNextMinimizedWin)    --Restore window
+	--, ((modMask, xK_comma), sendMessage (IncMasterN 1))                       --Increment the number of windows in the master area
+	--, ((modMask, xK_period), sendMessage (IncMasterN (-1)))                   --Deincrement the number of windows in the master area
+	--, ((modMask, xK_Right), sendMessage $ Go R)                               --Change focus to right
+	--, ((modMask, xK_Left ), sendMessage $ Go L)                               --Change focus to left
+	--, ((modMask, xK_Up   ), sendMessage $ Go U)                               --Change focus to up
+	--, ((modMask, xK_Down ), sendMessage $ Go D)                               --Change focus to down
 	, ((modMask .|. controlMask, xK_Right), sendMessage $ Swap R)             --Swap focused window to right
 	, ((modMask .|. controlMask, xK_Left ), sendMessage $ Swap L)             --Swap focused window to left
 	, ((modMask .|. controlMask, xK_Up   ), sendMessage $ Swap U)             --Swap focused window to up
@@ -750,9 +790,15 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 	, ((modMask .|. mod1Mask, xK_Up), withFocused (keysMoveWindow (0,-30)))   -- move floated window 10 pixels up
 	, ((modMask .|. mod1Mask, xK_Down), withFocused (keysMoveWindow (0,30)))  -- move floated window 10 pixels down
 	--Layout management bindings
-	, ((modMask, xK_space), sendMessage NextLayout)                                                                                    --Rotate through the available layout algorithms
-	, ((modMask, xK_v ), sendMessage ToggleLayout)                                                                                     --Toggle window titles (can click drag to move windows)
-	, ((modMask .|. shiftMask, xK_space ), flashText myTextConfig 1 " Set to Default Layout " >> (setLayout $ XMonad.layoutHook conf)) --Reset layout to workspaces default
+
+	--, ((modMask .|. shiftMask, xK_f), fullFloatFocused)                       --Push window into full screen
+	, ((modMask		    , xK_space ), fullFloatFocused)                       --Push window into full screen
+	, ((modMask		    , xK_space ), sendMessage $ XMonad.Layout.MultiToggle.Toggle NBFULL)	   
+	, ((modMask .|. shiftMask   , xK_space ), sendMessage NextLayout)					   
+
+	-- , ((modMask, xK_space), sendMessage NextLayout)                                                                                    --Rotate through the available layout algorithms
+	-- , ((modMask, xK_v ), sendMessage ToggleLayout)                                                                                     --Toggle window titles (can click drag to move windows)
+	-- , ((modMask .|. shiftMask, xK_space ), flashText myTextConfig 1 " Set to Default Layout " >> (setLayout $ XMonad.layoutHook conf)) --Reset layout to workspaces default
 	, ((modMask, xK_f), sendMessage $ XMonad.Layout.MultiToggle.Toggle TABBED)                                                         --Push layout into tabbed
 	, ((modMask .|. controlMask, xK_f), sendMessage $ XMonad.Layout.MultiToggle.Toggle FLOATED)                                        --Push layout into float
 	, ((modMask .|. shiftMask, xK_z), sendMessage $ XMonad.Layout.MultiToggle.Toggle MIRROR)                                           --Push layout into mirror
@@ -800,7 +846,59 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 	[ ((m .|. modMask, key), screenWorkspace sc >>= flip whenJust (windows . f))                 --Switch to n screens and send client to n screens
 	  | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
 	  , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
-	] where
+	] ++ [
+          -- ACS Key bindings                                                                                             
+	     ((modMask .|. controlMask , xK_F12   ), restart "xmonad" True) -- %! Restart xmonad			   
+	   , ((modMask		    , xK_F1    ), spawn "gmrun")						   
+	   , ((modMask		    , xK_F8    ), spawn "anamnesis --browse")					   
+	   , ((modMask		    , xK_F2    ), spawn "disper -d auto -e -t top")				   
+	   -- , ((modMask .|. controlMask	 , xK_u	    ), runOrRaise "emacs"  (className =? "emacs"))		   
+	   -- , ((modMask .|. controlMask   , xK_j	 ), gotoMenu)							   
+	   -- , ((modMask .|. controlMask   , xK_k	 ), bringMenu)							   
+														   
+	   -- , ((modMask		       , xK_a	  ), currentTopicAction myTopicConfig)				   
+	   -- , ((modMask		       , xK_g	  ), promptedGoto)						   
+	   -- , ((modMask .|. shiftMask   , xK_g	  ), promptedShift)						   
+														   
+	   --------------											   
+	   -- Navigation2d											   
+	   , ((modMask,		     xK_9    ), switchLayer)							   
+														   
+	   -- Directional navigation of windows									   
+	   , ((modMask,		     xK_l), windowGo R True)  -- True==Wrap					   
+	   , ((modMask,		     xK_h), windowGo L True)							   
+	   , ((modMask,		     xK_k), windowGo U True)							   
+	   , ((modMask,		     xK_j), windowGo D True)							   
+														   
+	   -- Swap adjacent windows										   
+	   , ((modMask,		     xK_o), windowSwap R False)							   
+	   , ((modMask,		     xK_y), windowSwap L False)							   
+	   , ((modMask,		     xK_i), windowSwap U False)							   
+	   , ((modMask,		     xK_u), windowSwap D False)							   
+														   
+	   -- Swap workspaces on adjacent screens								   
+	   , ((modMask .|. controlMask, xK_l), screenSwap R False)							   
+	   , ((modMask .|. controlMask, xK_h), screenSwap L False)							   
+	   , ((modMask .|. controlMask, xK_k), screenSwap U False)							   
+	   , ((modMask .|. controlMask, xK_j), screenSwap D False)							   
+														   
+	   -- Directional navigation of screens									   
+	   , ((modMask .|. shiftMask,  xK_l), screenGo R False)							   
+	   , ((modMask .|. shiftMask,  xK_h), screenGo L False)							   
+	   , ((modMask .|. shiftMask,  xK_k), screenGo U False)							   
+	   , ((modMask .|. shiftMask,  xK_j), screenGo D False)							   
+														   
+	   -- Send window to adjacent screen									   
+	   , ((modMask .|. mod1Mask,    xK_r    ), windowToScreen R False)						   
+	   , ((modMask .|. mod1Mask,    xK_l    ), windowToScreen L False)						   
+	   , ((modMask .|. mod1Mask,    xK_u    ), windowToScreen U False)						   
+	   , ((modMask .|. mod1Mask,    xK_d    ), windowToScreen D False)						   
+	   -- End Navigation2d											   
+                                                                                                                      
+           -- GridSelect                                                                                           
+           -- , ((modMask,                 xK_8    ), goToSelected myGSConfig)                                           
+
+        ] where
 		scratchPad = scratchpadSpawnActionCustom "/usr/bin/urxvtc -name scratchpad"
 		fullFloatFocused = withFocused $ \f -> windows =<< appEndo `fmap` runQuery doFullFloat f
 		rectFloatFocused = withFocused $ \f -> windows =<< appEndo `fmap` runQuery (doRectFloat $ W.RationalRect 0.05 0.05 0.9 0.9) f
