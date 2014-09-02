@@ -792,7 +792,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 	--Layout management bindings
 
 	--, ((modMask .|. shiftMask, xK_f), fullFloatFocused)                       --Push window into full screen
-	, ((modMask		    , xK_space ), fullFloatFocused)                       --Push window into full screen
+	-- , ((modMask		    , xK_space ), fullFloatFocused)                       --Push window into full screen
 	, ((modMask		    , xK_space ), sendMessage $ XMonad.Layout.MultiToggle.Toggle NBFULL)	   
 	, ((modMask .|. shiftMask   , xK_space ), sendMessage NextLayout)					   
 
