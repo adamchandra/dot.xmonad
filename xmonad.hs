@@ -445,7 +445,8 @@ myLayoutACS =
 
 -- Layout hook
 myLayoutHook =
-	gaps [(U,panelHeight), (D,panelHeight)] $
+	-- gaps [(U,panelHeight), (D,panelHeight)] $
+	gaps [(U,panelHeight)] $
 	configurableNavigation noNavigateBorders $
 	minimize $
 	maximize $
