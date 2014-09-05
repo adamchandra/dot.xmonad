@@ -13,80 +13,81 @@
 import XMonad
 
 
-import XMonad.Layout
-import XMonad.Layout.Circle
-import XMonad.Layout.Grid
-import XMonad.Layout.LayoutHints
-import XMonad.Layout.Named                 -- rename some layouts
-import XMonad.Layout.Reflect               -- ability to reflect layouts
-import XMonad.Layout.IM
-import XMonad.Layout.Gaps
-import XMonad.Layout.Named
-import XMonad.Layout.Tabbed
-import XMonad.Layout.OneBig
-import XMonad.Layout.Reflect
-import XMonad.Layout.MosaicAlt
-import XMonad.Layout.NoFrillsDecoration
-import XMonad.Layout.SimplestFloat
-import XMonad.Layout.NoBorders
-import XMonad.Layout.ResizableTile
-import XMonad.Layout.MultiToggle
-import XMonad.Layout.MultiToggle.Instances
-import XMonad.Layout.PerWorkspace
-import XMonad.Layout.Minimize
-import XMonad.Layout.Maximize
-import XMonad.Layout.ToggleLayouts
-import XMonad.Layout.MagicFocus
-import XMonad.Layout.WindowNavigation
-import XMonad.Hooks.SetWMName
-import XMonad.Actions.Navigation2D
-import XMonad.Layout.WindowSwitcherDecoration
-import XMonad.Layout.DraggingVisualizer
-import XMonad.Layout.LayoutBuilder
-import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.DynamicHooks
-import XMonad.Hooks.ManageDocks
-import XMonad.Hooks.UrgencyHook
-import XMonad.Hooks.EwmhDesktops
-import XMonad.Hooks.SetWMName
-import XMonad.Hooks.ManageHelpers
-import XMonad.Prompt
-import XMonad.Prompt.Shell
-import XMonad.Prompt.XMonad
-import XMonad.Prompt.Man
-import XMonad.Util.Timer
-import XMonad.Util.Cursor
-import XMonad.Util.Loggers
-import XMonad.Util.Run
-import XMonad.Util.Scratchpad
-import XMonad.Util.NamedScratchpad
-import XMonad.Actions.CycleWS
-import XMonad.Actions.ShowText
-import XMonad.Actions.GridSelect
-import XMonad.Actions.MouseResize
-import XMonad.Actions.FloatKeys
-import Data.Monoid
-import Data.List
-import System.Exit
-import System.IO
+import Control.Applicative
 import Control.Concurrent
+import Control.Exception as E
+import Data.List
+import Data.Monoid
 import Graphics.X11.ExtraTypes.XF86
 import Graphics.X11.Xinerama
-import Control.Applicative
-import Control.Exception as E
+import System.Exit
+import System.IO
+import XMonad.Actions.CycleWS
+import XMonad.Actions.FloatKeys
+import XMonad.Actions.GridSelect
+import XMonad.Actions.MouseResize
+import XMonad.Actions.Navigation2D
+import XMonad.Actions.ShowText
+import XMonad.Actions.WindowBringer
+import XMonad.Actions.WindowGo
+import XMonad.Hooks.DynamicHooks
+import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.ManageHelpers
+import XMonad.Hooks.SetWMName
+import XMonad.Hooks.SetWMName
+import XMonad.Hooks.UrgencyHook
+import XMonad.Layout
+import XMonad.Layout.Circle
+import XMonad.Layout.DraggingVisualizer
+import XMonad.Layout.Gaps
+import XMonad.Layout.Grid
+import XMonad.Layout.IM
+import XMonad.Layout.LayoutBuilder
+import XMonad.Layout.LayoutHints
+import XMonad.Layout.MagicFocus
+import XMonad.Layout.Maximize
+import XMonad.Layout.Minimize
+import XMonad.Layout.MosaicAlt
+import XMonad.Layout.MultiToggle
+import XMonad.Layout.MultiToggle.Instances
+import XMonad.Layout.Named
+import XMonad.Layout.Named                 -- rename some layouts
+import XMonad.Layout.NoBorders
+import XMonad.Layout.NoFrillsDecoration
+import XMonad.Layout.OneBig
+import XMonad.Layout.PerWorkspace
+import XMonad.Layout.Reflect
+import XMonad.Layout.Reflect               -- ability to reflect layouts
+import XMonad.Layout.ResizableTile
+import XMonad.Layout.SimplestFloat
+import XMonad.Layout.Tabbed
+import XMonad.Layout.ToggleLayouts
+import XMonad.Layout.WindowNavigation
+import XMonad.Layout.WindowSwitcherDecoration
+import XMonad.Prompt
+import XMonad.Prompt.Man
+import XMonad.Prompt.Shell
+import XMonad.Prompt.XMonad
+import XMonad.Util.Cursor
+import XMonad.Util.Loggers
+import XMonad.Util.NamedScratchpad
+import XMonad.Util.Run
+import XMonad.Util.Scratchpad
+import XMonad.Util.Timer
+
 import qualified XMonad.StackSet as W
 import qualified Data.Map as M
 import qualified XMonad.Actions.FlexibleResize as Flex
 import qualified XMonad.Util.ExtensibleState as XS
-import XMonad.Actions.WindowGo
-import XMonad.Actions.WindowBringer
 
 
 --------------------------------------------------------------------------------------------
 -- MAIN                                                                                   --
 --------------------------------------------------------------------------------------------
 
-myNormalBorderColor = "#1700ff"
+myNormalBorderColor = "#cc33aa"
 myFocusedBorderColor = "#FFee20"
 
 main :: IO ()
@@ -96,12 +97,12 @@ main = do
 	topRightBar <- dzenSpawnPipe $ dzenTopRightFlags r
 	botLeftBar  <- dzenSpawnPipe $ dzenBotLeftFlags r
 	botRightBar <- dzenSpawnPipe $ dzenBotRightFlags r
-	xmonad $ myUrgencyHook defaultConfig
+	xmonad $ myUrgencyHook $ defaultConfig
 		{ terminal           = "urxvtcd" --default terminal
 		, modMask            = mod4Mask          --default modMask
 		, focusFollowsMouse  = True              --focus follow config
 		, clickJustFocuses   = True              --focus click config
-		, borderWidth        = 3                 --border width
+		, borderWidth        = 4                 --border width
 		, normalBorderColor  = myNormalBorderColor --border color
 		, focusedBorderColor = myFocusedBorderColor --focused border color
 		, workspaces         = myWorkspaces      --workspace names
@@ -445,8 +446,8 @@ myLayoutACS =
 
 -- Layout hook
 myLayoutHook =
-	-- gaps [(U,panelHeight), (D,panelHeight)] $
-	gaps [(U,panelHeight)] $
+	gaps [(U,panelHeight), (D,panelHeight)] $
+        avoidStruts $
 	configurableNavigation noNavigateBorders $
 	minimize $
 	maximize $
@@ -744,9 +745,10 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
           --((modMask .|. shiftMask, xK_q), killAndExit)                        --Quit xmonad
 	  --((modMask, xK_q), killAndRestart)                                  --Restart xmonad
 	  ((0, xK_Pause), killAndRestart)
-	, ((mod1Mask, xK_F2), shellPrompt myXPConfig)                        --Launch Xmonad shell prompt
+	, ((modMask, xK_F5), shellPrompt myXPConfig)                        --Launch Xmonad shell prompt
 	, ((modMask, xK_F2), xmonadPrompt myXPConfig)                        --Launch Xmonad prompt
 	, ((mod1Mask, xK_F3), manPrompt myXPConfig)                          --Launch man prompt
+	, ((modMask, xK_F4), xmonadPrompt myXPConfig)                        --Launch Xmonad prompt
 	, ((modMask, xK_g), goToSelected $ myGSConfig myColorizer)           --Launch GridSelect
 	, ((modMask, xK_masculine), scratchPad)                              --Scratchpad (0x0060 = grave key)
 	, ((modMask, 0x0060), scratchPad)
@@ -813,11 +815,11 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 	--Scripts management bindings
 	-- , ((modMask, xK_d), spawn "/usr/bin/killall dzen2 haskell-cpu-usage.out")                                             --Kill dzen2
 	-- , ((0, 0x1008ffa9), spawn "/home/saunders/bin/touchpadtoggle.sh")                                                       --Toggle touchpad (xmodmap -pk | grep -i toggle)
-	-- , ((0, xF86XK_AudioMute), spawn "/home/saunders/bin/voldzen.sh t -d")                                                   --Mute/unmute volume
-	-- , ((0, xF86XK_AudioRaiseVolume), spawn "/home/saunders/bin/voldzen.sh + -d")                                            --Raise volume
-	-- , ((mod1Mask, xK_Up), spawn "/home/saunders/bin/voldzen.sh + -d")
-	-- , ((0, xF86XK_AudioLowerVolume), spawn "/home/saunders/bin/voldzen.sh - -d")                                            --Lower volume
-	-- , ((mod1Mask, xK_Down), spawn "/home/saunders/bin/voldzen.sh - -d")
+	, ((0, xF86XK_AudioMute), spawn "/home/saunders/bin/voldzen.sh t -d")                                                   --Mute/unmute volume
+	, ((0, xF86XK_AudioRaiseVolume), spawn "/home/saunders/.xmonad/bin/voldzen.sh + -d")                                            --Raise volume
+	, ((mod1Mask, xK_Up), spawn "/home/saunders/bin/voldzen.sh + -d")
+	, ((0, xF86XK_AudioLowerVolume), spawn "/home/saunders/.xmonad/bin/voldzen.sh - -d")                                            --Lower volume
+	, ((mod1Mask, xK_Down), spawn "/home/saunders/.xmonad/bin/voldzen.sh - -d")
 	-- , ((0, xF86XK_AudioNext),  flashText myTextConfig 1 " Next Song " >> spawn "/usr/bin/ncmpcpp next")                   --Next song
 	-- , ((mod1Mask, xK_Right), flashText myTextConfig 1 " Next Song " >> spawn "/usr/bin/ncmpcpp next")
 	-- , ((0, xF86XK_AudioPrev), flashText myTextConfig 1 " Previous Song " >> spawn "/usr/bin/ncmpcpp prev")                --Prev song
@@ -1135,3 +1137,11 @@ screenRes :: String -> Int -> Logger
 screenRes d n = do
 	res <- liftIO $ getScreenRes d n
 	return $ return $ (show $ xRes res) ++ "x" ++ (show $ yRes res)
+
+-- xmobarcc
+       --, border = 
+       --, borderColor = 
+       --, allDesktops = 
+       --, overrideRedirect = 
+       --, hideOnStart = 
+       --, persist = 
