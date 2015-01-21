@@ -76,6 +76,8 @@ import XMonad.Util.NamedScratchpad
 import XMonad.Util.Run
 import XMonad.Util.Scratchpad
 import XMonad.Util.Timer
+import XMonad
+import XMonad.Actions.UpdatePointer
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map as M
