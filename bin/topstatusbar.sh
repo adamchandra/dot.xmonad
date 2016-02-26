@@ -38,9 +38,9 @@ MpdRandom="Off"
 MpdRepeat="Off"
 
 #clickable areas
-VOL_TOGGLE_CMD="sh ${HOME}/bin/voldzen.sh t"
-VOL_UP_CMD="sh ${HOME}/bin/voldzen.sh +"
-VOL_DOWN_CMD="sh ${HOME}/bin/voldzen.sh -"
+VOL_TOGGLE_CMD="sh ${HOME}/.xmonad/bin/voldzen.sh t"
+VOL_UP_CMD="sh ${HOME}/.xmonad/bin/voldzen.sh +"
+VOL_DOWN_CMD="sh ${HOME}/.xmonad/bin/voldzen.sh -"
 DROP_START_CMD="dropbox start"
 DROP_STOP_CMD="dropbox stop"
 MPD_REP_CMD="mpc -h 127.0.0.1 repeat"
@@ -49,7 +49,7 @@ MPD_TOGGLE_CMD="ncmpcpp toggle"
 MPD_STOP_CMD="ncmpcpp stop"
 MPD_NEXT_CMD="ncmpcpp next"
 MPD_PREV_CMD="ncmpcpp prev"
-CAL_CMD="sh ${HOME}/bin/dzencal.sh"
+CAL_CMD="sh ${HOME}/.xmonad/bin/dzencal.sh"
 
 
 printVolInfo() {

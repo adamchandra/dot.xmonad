@@ -11,8 +11,12 @@ HEIGHT=16
 X_POS=946
 BAR_H=9
 
+# dzenFont       = "-adobe-Source Code Pro-normal-normal-normal-*-17-*-*-*-m-0-iso101646-1"
 #Colors and font
 FONT="-*-montecarlo-medium-r-normal-*-11-*-*-*-*-*-*-*"
+# FONT = "-adobe-Source Code Pro-normal-normal-normal-*-10-*-*-*-*-*-*-*"
+
+
 DZEN_BG="#020202"
 DZEN_BG2="#101010"
 DZEN_FG="#9d9d9d"
@@ -23,7 +27,7 @@ BAR_BG="#363636"
 COLOR_SEP=$DZEN_FG2
 
 #Options
-ICONPATH="${HOME}/.icons/xbm_icons/subtle/"
+ICONPATH="${HOME}/.icons/xbm/subtle/"
 INTERVAL=5
 WIFISIGNAL=0
 

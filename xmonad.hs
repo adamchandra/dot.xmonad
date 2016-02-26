@@ -89,7 +89,7 @@ import qualified XMonad.Util.ExtensibleState as XS
 -- MAIN                                                                                   --
 --------------------------------------------------------------------------------------------
 
-myNormalBorderColor = "#cc33aa"
+myNormalBorderColor = "#ee33aa"
 myFocusedBorderColor = "#FFee20"
 
 main :: IO ()
@@ -124,15 +124,26 @@ main = do
 		}
 
 
+
+
+
 --------------------------------------------------------------------------------------------
 -- LOOK AND FEEL CONFIG                                                                   --
 --------------------------------------------------------------------------------------------
+--
 
+
+-- name (opened by): -unknown-Ubuntu Mono-normal-normal-normal-*-17-*-*-*-m-0-iso10646-1
+-- (setq-default dotspacemacs-default-font '("Source Code Pro" :size 13 :weight normal :width normal :powerline-scale 1.1))
 -- Colors, fonts and paths
-dzenFont       = "-*-montecarlo-medium-r-normal-*-11-*-*-*-*-*-*-*"
+
+-- -adobe-Source Code Pro-normal-normal-normal-*-17-*-*-*-m-0-iso101646-1
+-- dzenFont       = "-*-montecarlo-medium-r-normal-*-11-*-*-*-*-*-*-*"
+
+dzenFont       = "-adobe-Source Code Pro-normal-normal-normal-*-17-*-*-*-m-0-iso101646-1"
 colorBlack     = "#020202" --Background
 colorBlackAlt  = "#1c1c1c" --Black Xdefaults
-colorGray      = "#444444" --Gray
+colorGray      = "#888888" --Gray
 colorGrayAlt   = "#101010" --Gray dark
 colorGrayAlt2  = "#404040"
 colorGrayAlt3  = "#252525"
@@ -147,13 +158,20 @@ colorRed       = "#f7a16e"
 colorRedAlt    = "#e0105f"
 colorGreen     = "#66ff66"
 colorGreenAlt  = "#558965"
-boxLeftIcon    = "/home/saunders/.xmonad/layout-icons/boxleft.xbm"  --left icon of dzen boxes
-boxLeftIcon2   = "/home/saunders/.xmonad/layout-icons/boxleft2.xbm" --left icon2 of dzen boxes
-boxRightIcon   = "/home/saunders/.xmonad/layout-icons/boxright.xbm" --right icon of dzen boxes
+
+
+boxLeftIcon     = "/home/saunders/.icons/xbm/subtle/empty.xbm"  --left icon of dzen boxes
+boxLeftIcon2    = "/home/saunders/.icons/xbm/subtle/empty.xbm"  --left icon of dzen boxes
+boxRightIcon    = "/home/saunders/.icons/xbm/subtle/empty.xbm"  --left icon of dzen boxes
+
+-- boxLeftIcon    = "/home/saunders/.xmonad/layout-icons/boxleft.xbm"  --left icon of dzen boxes
+--boxLeftIcon2   = "/home/saunders/.xmonad/layout-icons/boxleft2.xbm" --left icon2 of dzen boxes
+--boxRightIcon   = "/home/saunders/.xmonad/layout-icons/boxright.xbm" --right icon of dzen boxes
+
 xDefRes        = 1366 --no longer used
 yDefRes        = 768  --no longer used
-panelHeight    = 16   --height of top and bottom panels
-boxHeight      = 14   --height of dzen logger box
+panelHeight    = 24   --height of top and bottom panels
+boxHeight      = 19   --height of dzen logger box
 topPanelSepPos = 950  --left-right alignment pos of top panel
 botPanelSepPos = 450  --left-right alignment pos of bottom panel
 
@@ -299,11 +317,20 @@ green2BBoxPP = BoxPP
 -- Dzen logger clickable areas
 calendarCA :: CA
 calendarCA = CA
-	{ leftClickCA   = "/home/saunders/bin/dzencal.sh"
-	, middleClickCA = "/home/saunders/bin/dzencal.sh"
-	, rightClickCA  = "/home/saunders/bin/dzencal.sh"
-	, wheelUpCA     = "/home/saunders/bin/dzencal.sh"
-	, wheelDownCA   = "/home/saunders/bin/dzencal.sh"
+	{ leftClickCA   = "/home/saunders/.xmonad/bin/dzencal.sh"
+	, middleClickCA = "/home/saunders/.xmonad/bin/dzencal.sh"
+	, rightClickCA  = "/home/saunders/.xmonad/bin/dzencal.sh"
+	, wheelUpCA     = "/home/saunders/.xmonad/bin/dzencal.sh"
+	, wheelDownCA   = "/home/saunders/.xmonad/bin/dzencal.sh"
+	}
+
+mixerCA :: CA
+mixerCA = CA
+	{ leftClickCA   = "/usr/bin/alsamixer"
+	, middleClickCA = "/usr/bin/alsamixer"
+	, rightClickCA  = "/usr/bin/alsamixer"
+	, wheelUpCA     = "/home/saunders/.xmonad/bin/dzencal.sh"
+	, wheelDownCA   = "/home/saunders/.xmonad/bin/dzencal.sh"
 	}
 
 layoutCA :: CA
@@ -424,14 +451,14 @@ myFTabU = smartBorders $ named ("Unique " ++ myFTabName) $ tabbedAlways shrinkTe
 myFloaU = named ("Unique " ++ myFloaName) $ mouseResize $ noFrillsDeco shrinkText myTitleTheme simplestFloat
 
 -- (tiled ||| Mirror tiled ||| Circle ||| magnify Grid ||| Full)
-myLayoutACS = 
+myLayoutACS =
            -- make manual gap adjustment possible.
            --gaps (zip [U,D,L,R] (repeat 0)) $
            avoidStruts $
            layoutHints $
            mkToggle1 NBFULL $
-           mkToggle1 REFLECTX $                                
-           mkToggle1 REFLECTY $                               
+           mkToggle1 REFLECTX $
+           mkToggle1 REFLECTY $
            mkToggle1 NOBORDERS $
            mkToggle1 MIRROR $
            smartBorders (Circle ||| tiled ||| Grid)
@@ -455,8 +482,8 @@ myLayoutHook =
 	maximize $
         --mkToggle1 NBFULL $
         mkToggle (single NBFULL) $
-        --mkToggle1 REFLECTX $                                
-        --mkToggle1 REFLECTY $				     
+        --mkToggle1 REFLECTX $
+        --mkToggle1 REFLECTY $
 	--mkToggle1 NOBORDERS $
 	--mkToggle1 MIRROR $
 	mkToggle (single TABBED) $
@@ -474,9 +501,9 @@ myLayoutHook =
 		--chatLayouts = myToggleL (withIM (0.2) (Title "Buddy List") myMosA) myChatName                                   --workspace 5 layouts
 		allLayouts  =                                                                                                   -- rest of workspaces layouts
 			(myToggleL myTile myTileName) |||
-			(myToggleL Circle "Circle")   ||| 
-			(myToggleL Grid "Grid")    
-			-- (myToggleL myCst1 myCst1Name)  
+			(myToggleL Circle "Circle")   |||
+			(myToggleL Grid "Grid")
+			-- (myToggleL myCst1 myCst1Name)
 			--(myToggleL myCst2 myCst2Name) |||
 			--(myToggleL myOneB myOneBName) |||
 			--(myToggleL myMirr myMirrName) |||
@@ -608,7 +635,7 @@ myTopRightLogHook h = dynamicLogWithPP defaultPP
 	{ ppOutput  = hPutStrLn h
 	, ppOrder   = \(_:_:_:x) -> x
 	, ppSep     = " "
-	, ppExtras  = [ myUptimeL, myDateL ]
+	, ppExtras  = [ myAlsaMixer, myUptimeL, myDateL ]
 	}
 
 -- Dzen bottom left bar flags
@@ -667,7 +694,8 @@ myBotRightLogHook h = dynamicLogWithPP defaultPP
 	{ ppOutput = hPutStrLn h
 	, ppOrder  = \(_:_:_:x) -> x
 	, ppSep    = " "
-	, ppExtras = [ myCpuL, myMemL, myTempL, myWifiL, myBatL ]
+--	, ppExtras = [ myCpuL, myMemL ]
+  	, ppExtras = [ myCpuL, myMemL, myTempL, myWifiL, myBatL ]
 	}
 
 
@@ -679,6 +707,7 @@ myBotRightLogHook h = dynamicLogWithPP defaultPP
 myBatL =
 	(dzenBoxStyleL gray2BoxPP $ labelL "BATTERY") ++!
 	(dzenBoxStyleL blueBoxPP  $ batPercent 30 colorRed) ++!
+	(dzenBoxStyleL blueBoxPP  $ batPercent1 30 colorRed) ++!
 	(dzenBoxStyleL whiteBoxPP batStatus)
 myWifiL =
 	(dzenBoxStyleL gray2BoxPP $ labelL "WIFI") ++!
@@ -693,6 +722,10 @@ myCpuL =
 	(dzenBoxStyleL gray2BoxPP $ labelL "CPU") ++!
 	(dzenBoxStyleL blueBoxPP  $ cpuUsage "/tmp/haskell-cpu-usage.txt" 70 colorRed)
 
+myUpdateL =
+	(dzenBoxStyleL gray2BoxPP $ labelL "Updates") ++!
+	(dzenBoxStyleL blueBoxPP  $ cpuUsage "/tmp/haskell-cpu-usage.txt" 70 colorRed)
+
 -- BotLeft Loggers
 myResL =
 	(dzenBoxStyleL blue2BoxPP $ labelL "RES") ++!
@@ -702,10 +735,13 @@ myBrightL =
 	(dzenBoxStyleL whiteBoxPP $ brightPerc 15) --15 because brightness go from 0 to 15 in my case, usually must be 10
 
 -- TopRight Loggers
+myAlsaMixer =
+	(dzenClickStyleL mixerCA $ dzenBoxStyleL blueBoxPP $ labelL "MIXER") 
+
 myDateL =
 	(dzenBoxStyleL white2BBoxPP $ date "%A") ++!
 	(dzenBoxStyleL whiteBoxPP   $ date $ "%Y^fg(" ++ colorGray ++ ").^fg()%m^fg(" ++ colorGray ++ ").^fg()^fg(" ++ colorBlue ++ ")%d^fg()") ++!
-	(dzenBoxStyleL whiteBoxPP   $ date $ "%H^fg(" ++ colorGray ++ "):^fg()%M^fg(" ++ colorGray ++ "):^fg()^fg(" ++ colorGreen ++ ")%S^fg()") ++!
+	(dzenBoxStyleL whiteBoxPP   $ date $ "%I^fg(" ++ colorGray ++ "):^fg()%M^fg(" ++ colorGray ++ "):^fg()^fg(" ++ colorGreen ++ ")%S^fg()") ++!
 	(dzenClickStyleL calendarCA $ dzenBoxStyleL blueBoxPP $ labelL "CALENDAR")
 myUptimeL =
 	(dzenBoxStyleL blue2BoxPP   $ labelL "UPTIME") ++!
@@ -734,6 +770,7 @@ myWorkspaceL =
 			| (elem w $ map show [0..9]) = "^fg(" ++ colorGreen ++ ")" ++ w ++ "^fg(" ++ colorGray ++ ")|^fg()" ++ workspaceNames !! (mod ((read w::Int) - 1) 10)
 			| otherwise                  = "^fg(" ++ colorRed   ++ ")x^fg(" ++ colorGray ++ ")|^fg()" ++ w
 
+-- myCapsLockL = 
 
 --------------------------------------------------------------------------------------------
 -- BINDINGS CONFIG                                                                        --
@@ -744,13 +781,13 @@ myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 	--Xmonad bindings
 	[
-          --((modMask .|. shiftMask, xK_q), killAndExit)                        --Quit xmonad
-	  --((modMask, xK_q), killAndRestart)                                  --Restart xmonad
-	  ((0, xK_Pause), killAndRestart)
+    --((modMask .|. shiftMask, xK_q), killAndExit)                        --Quit xmonad
+	  ((modMask .|. shiftMask, xK_q), killAndRestart)                                  --Restart xmonad
+	, ((0, xK_Pause), killAndRestart)
 	, ((modMask, xK_F5), shellPrompt myXPConfig)                        --Launch Xmonad shell prompt
 	, ((modMask, xK_F2), xmonadPrompt myXPConfig)                        --Launch Xmonad prompt
-	, ((mod1Mask, xK_F3), manPrompt myXPConfig)                          --Launch man prompt
 	, ((modMask, xK_F4), xmonadPrompt myXPConfig)                        --Launch Xmonad prompt
+	, ((mod1Mask, xK_F3), manPrompt myXPConfig)                          --Launch man prompt
 	, ((modMask, xK_g), goToSelected $ myGSConfig myColorizer)           --Launch GridSelect
 	, ((modMask, xK_masculine), scratchPad)                              --Scratchpad (0x0060 = grave key)
 	, ((modMask, 0x0060), scratchPad)
@@ -798,8 +835,8 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 
 	--, ((modMask .|. shiftMask, xK_f), fullFloatFocused)                       --Push window into full screen
 	-- , ((modMask		    , xK_space ), fullFloatFocused)                       --Push window into full screen
-	, ((modMask		    , xK_space ), sendMessage $ XMonad.Layout.MultiToggle.Toggle NBFULL)	   
-	, ((modMask .|. shiftMask   , xK_space ), sendMessage NextLayout)					   
+	, ((modMask		    , xK_space ), sendMessage $ XMonad.Layout.MultiToggle.Toggle NBFULL)
+	, ((modMask .|. shiftMask   , xK_space ), sendMessage NextLayout)
 
 	-- , ((modMask, xK_space), sendMessage NextLayout)                                                                                    --Rotate through the available layout algorithms
 	-- , ((modMask, xK_v ), sendMessage ToggleLayout)                                                                                     --Toggle window titles (can click drag to move windows)
@@ -817,9 +854,9 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 	--Scripts management bindings
 	-- , ((modMask, xK_d), spawn "/usr/bin/killall dzen2 haskell-cpu-usage.out")                                             --Kill dzen2
 	-- , ((0, 0x1008ffa9), spawn "/home/saunders/bin/touchpadtoggle.sh")                                                       --Toggle touchpad (xmodmap -pk | grep -i toggle)
-	, ((0, xF86XK_AudioMute), spawn "/home/saunders/bin/voldzen.sh t -d")                                                   --Mute/unmute volume
+	, ((0, xF86XK_AudioMute), spawn "/home/saunders/.xmonad/bin/voldzen.sh t -d")                                                   --Mute/unmute volume
 	, ((0, xF86XK_AudioRaiseVolume), spawn "/home/saunders/.xmonad/bin/voldzen.sh + -d")                                            --Raise volume
-	, ((mod1Mask, xK_Up), spawn "/home/saunders/bin/voldzen.sh + -d")
+	, ((mod1Mask, xK_Up), spawn "/home/saunders/.xmonad0/bin/voldzen.sh + -d")
 	, ((0, xF86XK_AudioLowerVolume), spawn "/home/saunders/.xmonad/bin/voldzen.sh - -d")                                            --Lower volume
 	, ((mod1Mask, xK_Down), spawn "/home/saunders/.xmonad/bin/voldzen.sh - -d")
 	-- , ((0, xF86XK_AudioNext),  flashText myTextConfig 1 " Next Song " >> spawn "/usr/bin/ncmpcpp next")                   --Next song
@@ -852,56 +889,57 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 	  | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
 	  , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
 	] ++ [
-          -- ACS Key bindings                                                                                             
-	     ((modMask .|. controlMask , xK_F12   ), restart "xmonad" True) -- %! Restart xmonad			   
-	   , ((modMask		    , xK_F1    ), spawn "gmrun")						   
-	   , ((modMask		    , xK_F8    ), spawn "anamnesis --browse")					   
-	   , ((modMask		    , xK_F2    ), spawn "disper -d auto -e -t top")				   
-	   -- , ((modMask .|. controlMask	 , xK_u	    ), runOrRaise "emacs"  (className =? "emacs"))		   
-	   -- , ((modMask .|. controlMask   , xK_j	 ), gotoMenu)							   
-	   -- , ((modMask .|. controlMask   , xK_k	 ), bringMenu)							   
-														   
-	   -- , ((modMask		       , xK_a	  ), currentTopicAction myTopicConfig)				   
-	   -- , ((modMask		       , xK_g	  ), promptedGoto)						   
-	   -- , ((modMask .|. shiftMask   , xK_g	  ), promptedShift)						   
-														   
-	   --------------											   
-	   -- Navigation2d											   
-	   , ((modMask,		     xK_9    ), switchLayer)							   
-														   
-	   -- Directional navigation of windows									   
-	   , ((modMask,		     xK_l), windowGo R True)  -- True==Wrap					   
-	   , ((modMask,		     xK_h), windowGo L True)							   
-	   , ((modMask,		     xK_k), windowGo U True)							   
-	   , ((modMask,		     xK_j), windowGo D True)							   
-														   
-	   -- Swap adjacent windows										   
-	   , ((modMask,		     xK_o), windowSwap R False)							   
-	   , ((modMask,		     xK_y), windowSwap L False)							   
-	   , ((modMask,		     xK_i), windowSwap U False)							   
-	   , ((modMask,		     xK_u), windowSwap D False)							   
-														   
-	   -- Swap workspaces on adjacent screens								   
-	   , ((modMask .|. controlMask, xK_l), screenSwap R False)							   
-	   , ((modMask .|. controlMask, xK_h), screenSwap L False)							   
-	   , ((modMask .|. controlMask, xK_k), screenSwap U False)							   
-	   , ((modMask .|. controlMask, xK_j), screenSwap D False)							   
-														   
-	   -- Directional navigation of screens									   
-	   , ((modMask .|. shiftMask,  xK_l), screenGo R False)							   
-	   , ((modMask .|. shiftMask,  xK_h), screenGo L False)							   
-	   , ((modMask .|. shiftMask,  xK_k), screenGo U False)							   
-	   , ((modMask .|. shiftMask,  xK_j), screenGo D False)							   
-														   
-	   -- Send window to adjacent screen									   
-	   , ((modMask .|. mod1Mask,    xK_r    ), windowToScreen R False)						   
-	   , ((modMask .|. mod1Mask,    xK_l    ), windowToScreen L False)						   
-	   , ((modMask .|. mod1Mask,    xK_u    ), windowToScreen U False)						   
-	   , ((modMask .|. mod1Mask,    xK_d    ), windowToScreen D False)						   
-	   -- End Navigation2d											   
-                                                                                                                      
-           -- GridSelect                                                                                           
-           -- , ((modMask,                 xK_8    ), goToSelected myGSConfig)                                           
+          -- ACS Key bindings
+	     ((modMask .|. controlMask , xK_F12   ), restart "xmonad" True) -- %! Restart xmonad
+	   , ((modMask                 , xK_F1    ), spawn "gmrun")
+	   , ((modMask                 , xK_F2    ), spawn "anamnesis --browse")
+	   , ((modMask                 , xK_F7    ), spawn "disper -d auto -e -t top")
+	   , ((modMask .|. controlMask , xK_F7    ), spawn "disper -d auto")
+	   -- , ((modMask .|. controlMask	 , xK_u	    ), runOrRaise "emacs"  (className =? "emacs"))
+	   -- , ((modMask .|. controlMask   , xK_j	 ), gotoMenu)
+	   -- , ((modMask .|. controlMask   , xK_k	 ), bringMenu)
+
+	   -- , ((modMask		       , xK_a	  ), currentTopicAction myTopicConfig)
+	   -- , ((modMask		       , xK_g	  ), promptedGoto)
+	   -- , ((modMask .|. shiftMask   , xK_g	  ), promptedShift)
+
+	   --------------
+	   -- Navigation2d
+	   , ((modMask,		     xK_9    ), switchLayer)
+
+	   -- Directional navigation of windows
+	   , ((modMask,		     xK_l), windowGo R True)  -- True==Wrap
+	   , ((modMask,		     xK_h), windowGo L True)
+	   , ((modMask,		     xK_k), windowGo U True)
+	   , ((modMask,		     xK_j), windowGo D True)
+
+	   -- Swap adjacent windows
+	   , ((modMask,		     xK_o), windowSwap R False)
+	   , ((modMask,		     xK_y), windowSwap L False)
+	   , ((modMask,		     xK_i), windowSwap U False)
+	   , ((modMask,		     xK_u), windowSwap D False)
+
+	   -- Swap workspaces on adjacent screens
+	   , ((modMask .|. controlMask, xK_l), screenSwap R False)
+	   , ((modMask .|. controlMask, xK_h), screenSwap L False)
+	   , ((modMask .|. controlMask, xK_k), screenSwap U False)
+	   , ((modMask .|. controlMask, xK_j), screenSwap D False)
+
+	   -- Directional navigation of screens
+	   , ((modMask .|. shiftMask,  xK_l), screenGo R False)
+	   , ((modMask .|. shiftMask,  xK_h), screenGo L False)
+	   , ((modMask .|. shiftMask,  xK_k), screenGo U False)
+	   , ((modMask .|. shiftMask,  xK_j), screenGo D False)
+
+	   -- Send window to adjacent screen
+	   , ((modMask .|. mod1Mask,    xK_r    ), windowToScreen R False)
+	   , ((modMask .|. mod1Mask,    xK_l    ), windowToScreen L False)
+	   , ((modMask .|. mod1Mask,    xK_u    ), windowToScreen U False)
+	   , ((modMask .|. mod1Mask,    xK_d    ), windowToScreen D False)
+	   -- End Navigation2d
+
+           -- GridSelect
+           -- , ((modMask,                 xK_8    ), goToSelected myGSConfig)
 
         ] where
 		scratchPad = scratchpadSpawnActionCustom "/usr/bin/urxvtc -name scratchpad"
@@ -1063,6 +1101,11 @@ batPercent :: Int -> String -> Logger
 batPercent v c = fileToLogger format "N/A" "/sys/class/power_supply/BAT0/capacity" where
 	format x = if ((read x::Int) <= v) then "^fg(" ++ c ++ ")" ++ x ++ "%^fg()" else (x ++ "%")
 
+-- Battery percent
+batPercent1 :: Int -> String -> Logger
+batPercent1 v c = fileToLogger format "N/A" "/sys/class/power_supply/BAT1/capacity" where
+	format x = if ((read x::Int) <= v) then "^fg(" ++ c ++ ")" ++ x ++ "%^fg()" else (x ++ "%")
+
 -- Battery status
 batStatus :: Logger
 batStatus = fileToLogger (\x -> x) "AC Conection" "/sys/class/power_supply/BAT0/status"
@@ -1141,9 +1184,9 @@ screenRes d n = do
 	return $ return $ (show $ xRes res) ++ "x" ++ (show $ yRes res)
 
 -- xmobarcc
-       --, border = 
-       --, borderColor = 
-       --, allDesktops = 
-       --, overrideRedirect = 
-       --, hideOnStart = 
-       --, persist = 
+       --, border =
+       --, borderColor =
+       --, allDesktops =
+       --, overrideRedirect =
+       --, hideOnStart =
+       --, persist =
