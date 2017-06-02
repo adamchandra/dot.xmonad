@@ -564,7 +564,8 @@ manageWindows = composeAll . concat $
 		            , "Preferences", "Search Engines", "Set up sync", "Passwords and Exceptions"
 		            , "Autofill Options", "Rename File", "Copying files", "Moving files"
 		            , "File Properties", "Replace", "Quit GIMP", "Change Foreground Color"
-		            , "Change Background Color", ""]
+		            , "Change Background Color"
+                            , "Edge: The Web Ruler"]
 		myFloatSN = ["Event Tester"]
 		myFocusDC = ["Event Tester", "Notify-osd"]
 		keepMaster c = assertSlave <+> assertMaster where
@@ -736,7 +737,7 @@ myBrightL =
 
 -- TopRight Loggers
 myAlsaMixer =
-	(dzenClickStyleL mixerCA $ dzenBoxStyleL blueBoxPP $ labelL "MIXER") 
+	(dzenClickStyleL mixerCA $ dzenBoxStyleL blueBoxPP $ labelL "MIXER")
 
 myDateL =
 	(dzenBoxStyleL white2BBoxPP $ date "%A") ++!
@@ -770,7 +771,7 @@ myWorkspaceL =
 			| (elem w $ map show [0..9]) = "^fg(" ++ colorGreen ++ ")" ++ w ++ "^fg(" ++ colorGray ++ ")|^fg()" ++ workspaceNames !! (mod ((read w::Int) - 1) 10)
 			| otherwise                  = "^fg(" ++ colorRed   ++ ")x^fg(" ++ colorGray ++ ")|^fg()" ++ w
 
--- myCapsLockL = 
+-- myCapsLockL =
 
 --------------------------------------------------------------------------------------------
 -- BINDINGS CONFIG                                                                        --
@@ -789,8 +790,8 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 	, ((modMask, xK_F4), xmonadPrompt myXPConfig)                        --Launch Xmonad prompt
 	, ((mod1Mask, xK_F3), manPrompt myXPConfig)                          --Launch man prompt
 	, ((modMask, xK_g), goToSelected $ myGSConfig myColorizer)           --Launch GridSelect
-	, ((modMask, xK_masculine), scratchPad)                              --Scratchpad (0x0060 = grave key)
-	, ((modMask, 0x0060), scratchPad)
+	-- , ((modMask, xK_masculine), scratchPad)                              --Scratchpad (0x0060 = grave key)
+	-- , ((modMask, 0x0060), scratchPad)
 	, ((modMask .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf) --Launch default terminal
 	--Window management bindings
 	, ((modMask .|. shiftMask, xK_c), kill)                                                 --Close focused window
@@ -892,16 +893,10 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
           -- ACS Key bindings
 	     ((modMask .|. controlMask , xK_F12   ), restart "xmonad" True) -- %! Restart xmonad
 	   , ((modMask                 , xK_F1    ), spawn "gmrun")
-	   , ((modMask                 , xK_F2    ), spawn "anamnesis --browse")
-	   , ((modMask                 , xK_F7    ), spawn "disper -d auto -e -t top")
-	   , ((modMask .|. controlMask , xK_F7    ), spawn "disper -d auto")
-	   -- , ((modMask .|. controlMask	 , xK_u	    ), runOrRaise "emacs"  (className =? "emacs"))
-	   -- , ((modMask .|. controlMask   , xK_j	 ), gotoMenu)
-	   -- , ((modMask .|. controlMask   , xK_k	 ), bringMenu)
-
-	   -- , ((modMask		       , xK_a	  ), currentTopicAction myTopicConfig)
-	   -- , ((modMask		       , xK_g	  ), promptedGoto)
-	   -- , ((modMask .|. shiftMask   , xK_g	  ), promptedShift)
+	   , ((modMask                 , xK_r     ), spawn "anamnesis --browse")
+	   , ((modMask  .|. shiftMask  , xK_r     ), spawn "anamnesis --restart")
+	   , ((modMask                 , xK_F7    ), spawn "monitor-reconnect")
+	   , ((modMask .|. controlMask , xK_F7    ), spawn "disper -d auto -e")
 
 	   --------------
 	   -- Navigation2d
