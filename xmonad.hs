@@ -89,7 +89,7 @@ import qualified XMonad.Util.ExtensibleState as XS
 -- MAIN                                                                                   --
 --------------------------------------------------------------------------------------------
 
-myNormalBorderColor = "#ee33aa"
+myNormalBorderColor = "#9933cc"
 myFocusedBorderColor = "#FFee20"
 
 main :: IO ()
@@ -897,6 +897,9 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 	   , ((modMask  .|. shiftMask  , xK_r     ), spawn "anamnesis --restart")
 	   , ((modMask                 , xK_F7    ), spawn "monitor-reconnect")
 	   , ((modMask .|. controlMask , xK_F7    ), spawn "disper -d auto -e")
+	   , ((modMask .|. shiftMask   , xK_F7    ), spawn "disper -d auto -e -t right")
+	   , ((modMask                 , xK_F8    ), spawn "/home/saunders/ZZ-manual-setup.sh -t thinkpad")
+	   , ((modMask  .|. shiftMask  , xK_F8    ), spawn "/home/saunders/ZZ-manual-setup.sh -t typematrix")
 
 	   --------------
 	   -- Navigation2d
