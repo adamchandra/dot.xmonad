@@ -7,7 +7,7 @@
 --------------------------------------------------------------------------------------------
 
 -- Options
-{-# LANGUAGE DeriveDataTypeable, NoMonomorphismRestriction, MultiParamTypeClasses, ImplicitParams #-}
+{-# LANGUAGE DeriveDataTypeable, NoMonomorphismRestriction, MultiParamTypeClasses, ImplicitParams, FlexibleInstances, FlexibleContexts #-}
 
 -- Modules
 import XMonad
