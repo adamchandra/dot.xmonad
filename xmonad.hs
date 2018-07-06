@@ -480,7 +480,7 @@ myLayoutHook =
 	configurableNavigation noNavigateBorders $
 	minimize $
 	maximize $
-        --mkToggle1 NBFULL $
+        mkToggle1 NBFULL $
         mkToggle (single NBFULL) $
         --mkToggle1 REFLECTX $
         --mkToggle1 REFLECTY $
@@ -517,7 +517,7 @@ myLayoutHook =
 		myCst1 = (layoutN 2 (relBox 0 0 1 0.6) (Just $ relBox 0 0 1 1) $ myTile) $ (layoutAll (relBox 0 0.6 1 1) $ myTabb) --custom1 layout
 		myCst2 = (layoutN 1 (relBox 0 0 0.4 1) (Just $ relBox 0 0 1 1) $ myTile) $ (layoutAll (relBox 0.4 0 1 1) $ myTabb) --custom2 layout
 		myCst3 = (layoutN 1 (relBox 0 0 1 0.7) (Just $ relBox 0 0 1 1) $ myTabb) $ (layoutAll (relBox 0 0.7 1 1) $ myTabb) --custom3 layout
-		myChat = withIM (0.20) (Title "Buddy List") myMosA                                                                 --custom chat layout
+		-- myChat = withIM (0.20) (Title "Buddy List") myMosA                                                                 --custom chat layout
 		myTabb = tabbed shrinkText myTitleTheme                                                                            --default tabbed layout
 		--costom draggingVisualizer toggle
 		myToggleL l n = smartBorders $ toggleLayouts (named ("Switcher " ++ n) $ switcher l) (named ("Normal " ++ n) l) where
@@ -612,7 +612,7 @@ myTopLeftLogHook h = dynamicLogWithPP defaultPP
 	{ ppOutput = hPutStrLn h
 	, ppOrder  = \(_:_:_:x) -> x
 	, ppSep    = " "
-	, ppExtras = [ myLayoutL, myWorkspaceL, myFocusL ]
+	, ppExtras = [ myDateL, myLayoutL, myWorkspaceL, myFocusL ]
 	}
 
 -- Dzen top right bar flags
@@ -636,7 +636,7 @@ myTopRightLogHook h = dynamicLogWithPP defaultPP
 	{ ppOutput  = hPutStrLn h
 	, ppOrder   = \(_:_:_:x) -> x
 	, ppSep     = " "
-	, ppExtras  = [ myAlsaMixer, myUptimeL, myDateL ]
+	, ppExtras  = [ myUptimeL, myAlsaMixer  ]
 	}
 
 -- Dzen bottom left bar flags
@@ -731,6 +731,7 @@ myUpdateL =
 myResL =
 	(dzenBoxStyleL blue2BoxPP $ labelL "RES") ++!
 	(dzenBoxStyleL whiteBoxPP $ screenRes ":0" 0)
+
 myBrightL =
 	(dzenBoxStyleL blue2BoxPP $ labelL "BRIGHT") ++!
 	(dzenBoxStyleL whiteBoxPP $ brightPerc 15) --15 because brightness go from 0 to 15 in my case, usually must be 10
@@ -782,7 +783,7 @@ myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 	--Xmonad bindings
 	[
-    --((modMask .|. shiftMask, xK_q), killAndExit)                        --Quit xmonad
+          --((modMask .|. shiftMask, xK_q), killAndExit)                        --Quit xmonad
 	  ((modMask .|. shiftMask, xK_q), killAndRestart)                                  --Restart xmonad
 	, ((0, xK_Pause), killAndRestart)
 	, ((modMask, xK_F5), shellPrompt myXPConfig)                        --Launch Xmonad shell prompt
@@ -861,13 +862,6 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 	, ((0, xF86XK_AudioLowerVolume), spawn "/home/saunders/.xmonad/bin/voldzen.sh - -d")                                            --Lower volume
 	, ((mod1Mask, xK_Down), spawn "/home/saunders/.xmonad/bin/voldzen.sh - -d")
 	-- , ((0, xF86XK_AudioNext),  flashText myTextConfig 1 " Next Song " >> spawn "/usr/bin/ncmpcpp next")                   --Next song
-	-- , ((mod1Mask, xK_Right), flashText myTextConfig 1 " Next Song " >> spawn "/usr/bin/ncmpcpp next")
-	-- , ((0, xF86XK_AudioPrev), flashText myTextConfig 1 " Previous Song " >> spawn "/usr/bin/ncmpcpp prev")                --Prev song
-	-- , ((mod1Mask, xK_Left), flashText myTextConfig 1 " Previous Song " >> spawn "/usr/bin/ncmpcpp prev")
-	-- , ((0, xF86XK_AudioPlay), flashText myTextConfig 1 " Song Toggled " >> spawn "/usr/bin/ncmpcpp toggle")               --Toggle song
-	-- , ((mod1Mask .|. controlMask, xK_Down), flashText myTextConfig 1 " Song Toggled " >> spawn "/usr/bin/ncmpcpp toggle")
-	-- , ((0, xF86XK_AudioStop), flashText myTextConfig 1 " Song Stopped " >> spawn "/usr/bin/ncmpcpp stop")                 --Stop song
-	-- , ((mod1Mask .|. controlMask, xK_Up), flashText myTextConfig 1 " Song Stopped " >> spawn "ncmpcpp stop")
 	-- , ((0, xF86XK_MonBrightnessUp), spawn "/home/saunders/bin/bridzen.sh")                                                  --Raise brightness
 	-- , ((0, xF86XK_MonBrightnessDown), spawn "/home/saunders/bin/bridzen.sh")                                                --Lower brightness
 	-- , ((0, xF86XK_ScreenSaver), spawn "/home/saunders/bin/turnoffscreen.sh")                                                --Lock screen
