@@ -1,0 +1,70 @@
+
+xmonad.hs:97:1: warning: [-Wtabs]
+    Tab character found here, and in 809 further locations.
+    Please use spaces instead.
+   |
+97 |         r <- getScreenRes ":0" 0  --display ":0", screen 0
+   | ^^^^^^^^
+
+xmonad.hs:102:34: warning: [-Wdeprecations]
+    In the use of ‘defaultConfig’
+    (imported from XMonad, but defined in XMonad.Config):
+    Deprecated: "Use def (from Data.Default, and re-exported by XMonad and XMonad.Config) instead."
+    |
+102 |         xmonad $ myUrgencyHook $ defaultConfig
+    |                                  ^^^^^^^^^^^^^
+
+xmonad.hs:180:16: warning: [-Wdeprecations]
+    In the use of ‘defaultTheme’
+    (imported from XMonad.Layout.Tabbed, but defined in XMonad.Layout.Decoration):
+    Deprecated: "Use def (from Data.Default, and re-exported by XMonad.Layout.Decoration) instead."
+    |
+180 | myTitleTheme = defaultTheme
+    |                ^^^^^^^^^^^^
+
+xmonad.hs:195:14: warning: [-Wdeprecations]
+    In the use of ‘defaultXPConfig’ (imported from XMonad.Prompt):
+    Deprecated: "Use def (from Data.Default, and re-exported from XMonad.Prompt) instead."
+    |
+195 | myXPConfig = defaultXPConfig
+    |              ^^^^^^^^^^^^^^^
+
+xmonad.hs:612:39: warning: [-Wdeprecations]
+    In the use of ‘defaultPP’ (imported from XMonad.Hooks.DynamicLog):
+    Deprecated: "Use def (from Data.Default, and re-exported by XMonad.Hooks.DynamicLog) instead."
+    |
+612 | myTopLeftLogHook h = dynamicLogWithPP defaultPP
+    |                                       ^^^^^^^^^
+
+xmonad.hs:636:40: warning: [-Wdeprecations]
+    In the use of ‘defaultPP’ (imported from XMonad.Hooks.DynamicLog):
+    Deprecated: "Use def (from Data.Default, and re-exported by XMonad.Hooks.DynamicLog) instead."
+    |
+636 | myTopRightLogHook h = dynamicLogWithPP defaultPP
+    |                                        ^^^^^^^^^
+
+xmonad.hs:660:79: warning: [-Wdeprecations]
+    In the use of ‘defaultPP’ (imported from XMonad.Hooks.DynamicLog):
+    Deprecated: "Use def (from Data.Default, and re-exported by XMonad.Hooks.DynamicLog) instead."
+    |
+660 | myBotLeftLogHook h = dynamicLogWithPP . namedScratchpadFilterOutWorkspacePP $ defaultPP
+    |                                                                               ^^^^^^^^^
+
+xmonad.hs:695:40: warning: [-Wdeprecations]
+    In the use of ‘defaultPP’ (imported from XMonad.Hooks.DynamicLog):
+    Deprecated: "Use def (from Data.Default, and re-exported by XMonad.Hooks.DynamicLog) instead."
+    |
+695 | myBotRightLogHook h = dynamicLogWithPP defaultPP
+    |                                        ^^^^^^^^^
+
+xmonad.hs:831:75: warning: [-Woverflowed-literals]
+    Literal -30 is out of the GHC.Word.Word32 range 0..4294967295
+    |
+831 |         , ((modMask .|. mod1Mask, xK_Left), withFocused (keysMoveWindow (-30,0))) -- move floated window 10 pixels left
+    |                                                                           ^^
+
+xmonad.hs:833:75: warning: [-Woverflowed-literals]
+    Literal -30 is out of the GHC.Word.Word32 range 0..4294967295
+    |
+833 |         , ((modMask .|. mod1Mask, xK_Up), withFocused (keysMoveWindow (0,-30)))   -- move floated window 10 pixels up
+    |                                                                           ^^

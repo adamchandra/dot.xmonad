@@ -399,11 +399,12 @@ myFloaName = "Float"
 -- Startup Hook
 myStartupHook =
 	(setDefaultCursor xC_left_ptr) <+>
+	(liftIO $ threadDelay 1000000) <+> --needed so that xmonad can be launched on the fly without crashing
+	(startTimer 1 >>= XS.put . TID)
+
+	--	(spawn "/home/saunders/.xmonad/apps/haskell-cpu-usage.out 5") <+>
 	-- (spawn "/usr/bin/feh --bg-scale ~/Pictures/wallpapers/xmonad/xmonad_def_black.png") <+>
 	-- (spawn "/usr/bin/killall haskell-cpu-usage.out") <+>
-	(liftIO $ threadDelay 1000000) <+> --needed so that xmonad can be launched on the fly without crashing
-	(spawn "/home/saunders/.xmonad/apps/haskell-cpu-usage.out 5") <+>
-	(startTimer 1 >>= XS.put . TID)
 
 
 --------------------------------------------------------------------------------------------
@@ -783,7 +784,6 @@ myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 	--Xmonad bindings
 	[
-          --((modMask .|. shiftMask, xK_q), killAndExit)                        --Quit xmonad
 	  ((modMask .|. shiftMask, xK_q), killAndRestart)                                  --Restart xmonad
 	, ((0, xK_Pause), killAndRestart)
 	, ((modMask, xK_F5), shellPrompt myXPConfig)                        --Launch Xmonad shell prompt
@@ -791,9 +791,8 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 	, ((modMask, xK_F4), xmonadPrompt myXPConfig)                        --Launch Xmonad prompt
 	, ((mod1Mask, xK_F3), manPrompt myXPConfig)                          --Launch man prompt
 	, ((modMask, xK_g), goToSelected $ myGSConfig myColorizer)           --Launch GridSelect
-	-- , ((modMask, xK_masculine), scratchPad)                              --Scratchpad (0x0060 = grave key)
-	-- , ((modMask, 0x0060), scratchPad)
 	, ((modMask .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf) --Launch default terminal
+
 	--Window management bindings
 	, ((modMask .|. shiftMask, xK_c), kill)                                                 --Close focused window
 	, ((mod1Mask, xK_F4), kill)
@@ -833,6 +832,9 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 	, ((modMask .|. mod1Mask, xK_Right), withFocused (keysMoveWindow (30,0))) -- move floated window 10 pixels right
 	, ((modMask .|. mod1Mask, xK_Up), withFocused (keysMoveWindow (0,-30)))   -- move floated window 10 pixels up
 	, ((modMask .|. mod1Mask, xK_Down), withFocused (keysMoveWindow (0,30)))  -- move floated window 10 pixels down
+
+
+
 	--Layout management bindings
 
 	--, ((modMask .|. shiftMask, xK_f), fullFloatFocused)                       --Push window into full screen
@@ -868,6 +870,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 	-- , ((0, 0xff14), spawn "/home/saunders/bin/turnoffscreen.sh")
 	-- , ((0, xK_Print), spawn "/usr/bin/scrot '%Y-%m-%d_$wx$h.png'" >> flashText myTextConfig 1 " Screenshot Saved ")       --Take a screenshot
 	-- , ((modMask , xK_s), spawn "/home/saunders/bin/turnoffscreen.sh")                                                       --Turn off screen
+
 	--Workspaces management bindings
 	--, ((mod1Mask, xK_comma), flashText myTextConfig 1 " Toggled to Previous Workspace " >> toggleWS)                          --Toggle to the workspace displayed previously
 	--, ((mod1Mask, xK_masculine), flashText myTextConfig 1 " Switching with Workspace 1 " >> toggleOrView (myWorkspaces !! 0)) --If ws != 0 then move to workspace 0, else move to latest ws I was
